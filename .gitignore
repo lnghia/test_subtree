@@ -31,3 +31,6 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### override properties file ###
+application-override.properties
