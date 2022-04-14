@@ -12,11 +12,16 @@ import java.util.Optional;
 
 @Service
 @NoArgsConstructor
-@AllArgsConstructor
 public class UserServiceImpl implements UserService{
     private UserRepo userRepo;
 
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    public UserServiceImpl(UserRepo userRepo, PasswordEncoder passwordEncoder){
+        this.userRepo = userRepo;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     @Override
     public User getUserById(long id) {
