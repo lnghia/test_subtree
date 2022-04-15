@@ -1,10 +1,10 @@
 package com.example.demo.ServiceImpl.AuthenticationServiceImpl;
 
 
-import com.example.demo.Entity.User;
+import com.example.demo.Entity.UserEntity;
 import com.example.demo.Repository.UserRepo;
-import com.example.demo.Service.Authentication.AuthenticationService;
-import com.example.demo.Service.Authentication.AuthenticationServiceImpl;
+import com.example.demo.Service.AuthenticationService.AuthenticationService;
+import com.example.demo.Service.AuthenticationService.AuthenticationServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -19,7 +19,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class AuthenticationServiceImplTest {
-    User user;
+    UserEntity user;
     AuthenticationService authService;
     UserRepo userRepo;
     PasswordEncoder passwordEncoder;
@@ -30,7 +30,7 @@ public class AuthenticationServiceImplTest {
         passwordEncoder = mock(PasswordEncoder.class);
         authService = new AuthenticationServiceImpl(userRepo, passwordEncoder);
         // password is "alo" in plaintext
-        user = User.builder().id(1L).email("abc@gmail.com").username("alo").password("$10$jg.egwWVynU8aBv6r8SKWOhFDiYnQavSSXNVwfxqYvstIJyhA7ByS").build();
+        user = UserEntity.builder().id(1L).email("abc@gmail.com").username("alo").password("$10$jg.egwWVynU8aBv6r8SKWOhFDiYnQavSSXNVwfxqYvstIJyhA7ByS").build();
         when(userRepo.findByUsername("alo")).thenReturn(Optional.of(user));
         when(passwordEncoder.matches(anyString(), eq(user.getPassword()))).thenReturn(false);
         when(passwordEncoder.matches("alo", user.getPassword())).thenReturn(true);
@@ -38,25 +38,25 @@ public class AuthenticationServiceImplTest {
 
     @Test
     void authenticateUser_ShouldReturnUser_WhenCredentialsValid(){
-        User result = authService.authenticateUser("alo", "alo");
+        UserEntity result = authService.authenticateUser("alo", "alo");
         assertThat(result, is(user));
     }
 
     @Test
     void authenticateUser_ShouldReturnNull_WhenPasswordInvalid(){
-        User result = authService.authenticateUser("alo", "al");
+        UserEntity result = authService.authenticateUser("alo", "al");
         assertThat(result, is(nullValue()));
     }
 
     @Test
     void authenticateUser_ShouldReturnNull_WhenUsernameInvalid(){
-        User result = authService.authenticateUser("al", "alo");
+        UserEntity result = authService.authenticateUser("al", "alo");
         assertThat(result, is(nullValue()));
     }
 
     @Test
     void authenticateUser_ShouldReturnNull_WhenCredentialsInvalid(){
-        User result = authService.authenticateUser("al", "al");
+        UserEntity result = authService.authenticateUser("al", "al");
         assertThat(result, is(nullValue()));
     }
 }

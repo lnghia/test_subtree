@@ -1,8 +1,7 @@
-package com.example.demo.Service.Authentication;
+package com.example.demo.Service.AuthenticationService;
 
-import com.example.demo.Entity.User;
+import com.example.demo.Entity.UserEntity;
 import com.example.demo.Repository.UserRepo;
-import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -24,8 +23,8 @@ public class AuthenticationServiceImpl implements AuthenticationService{
     }
 
     @Override
-    public User authenticateUser(String username, String password) {
-        Optional<User> user = userRepo.findByUsername(username);
+    public UserEntity authenticateUser(String username, String password) {
+        Optional<UserEntity> user = userRepo.findByUsername(username);
 
         if(user.isPresent() && passwordEncoder.matches(password, user.get().getPassword())){
             return user.get();

@@ -1,6 +1,6 @@
 package com.example.demo.CustomUserDetails;
 
-import com.example.demo.Entity.User;
+import com.example.demo.Entity.UserEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
@@ -14,7 +14,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 public class CustomUserDetails implements UserDetails {
-    private User user;
+    private UserEntity user;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

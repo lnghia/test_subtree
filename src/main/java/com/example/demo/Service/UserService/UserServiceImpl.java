@@ -1,8 +1,7 @@
-package com.example.demo.Service.User;
+package com.example.demo.Service.UserService;
 
-import com.example.demo.Entity.User;
+import com.example.demo.Entity.UserEntity;
 import com.example.demo.Repository.UserRepo;
-import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -24,22 +23,22 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public User getUserById(long id) {
-        Optional<User> user = userRepo.findById(id);
+    public UserEntity getUserById(long id) {
+        Optional<UserEntity> user = userRepo.findById(id);
 
         return user.orElse(null);
     }
 
     @Override
-    public User getUSerByUsername(String username) {
-        Optional<User> user = userRepo.findByUsername(username);
+    public UserEntity getUSerByUsername(String username) {
+        Optional<UserEntity> user = userRepo.findByUsername(username);
 
         return user.orElse(null);
     }
 
     @Override
-    public User createUser(String email, String username, String password) {
-        User user = new User();
+    public UserEntity createUser(String email, String username, String password) {
+        UserEntity user = new UserEntity();
 
         user.setUsername(username);
         user.setEmail(email);

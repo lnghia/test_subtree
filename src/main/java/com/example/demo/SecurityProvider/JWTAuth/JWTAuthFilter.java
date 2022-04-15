@@ -1,13 +1,11 @@
 package com.example.demo.SecurityProvider.JWTAuth;
 
 import com.example.demo.CustomUserDetails.CustomUserDetails;
-import com.example.demo.CustomUserDetails.CustomUserDetailsService;
-import com.example.demo.Entity.User;
-import com.example.demo.Service.User.UserService;
+import com.example.demo.Entity.UserEntity;
+import com.example.demo.Service.UserService.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -36,7 +34,7 @@ public class JWTAuthFilter extends OncePerRequestFilter {
             userId = Long.valueOf(jwtProvider.getUserIdFromJWT(jwt));
 
             if(userId != null && SecurityContextHolder.getContext().getAuthentication() == null){
-                User user = userService.getUserById(userId);
+                UserEntity user = userService.getUserById(userId);
 
                 if(user != null){
                     customUserDetails = new CustomUserDetails(user);

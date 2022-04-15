@@ -1,6 +1,6 @@
 package com.example.demo.CustomUserDetails;
 
-import com.example.demo.Entity.User;
+import com.example.demo.Entity.UserEntity;
 import com.example.demo.Repository.UserRepo;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +23,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<User> user = userRepo.findByUsername(username);
+        Optional<UserEntity> user = userRepo.findByUsername(username);
 
         if(!user.isPresent()) throw new UsernameNotFoundException(username);
 
