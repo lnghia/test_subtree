@@ -1,13 +1,11 @@
-package com.example.demo.DTO.AuthenticationDTO;
+package com.example.demo.dto.Request;
 
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class RegisterRequest {
-    private String email;
-
+public class LoginRequestDTO {
     private String username;
 
     private String password;

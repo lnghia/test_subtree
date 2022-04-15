@@ -2,6 +2,7 @@ package com.example.demo.CustomUserDetails;
 
 import com.example.demo.Entity.UserEntity;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -13,6 +14,7 @@ import java.util.List;
 
 @Data
 @AllArgsConstructor
+@Builder(toBuilder = true)
 public class CustomUserDetails implements UserDetails {
     private UserEntity user;
 
