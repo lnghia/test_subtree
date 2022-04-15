@@ -1,60 +1,82 @@
 package com.example.demo.Service.AuthenticationService;
 
 
+import com.example.demo.CustomUserDetails.CustomUserDetails;
 import com.example.demo.Entity.UserEntity;
 import com.example.demo.Repository.UserRepo;
+import com.example.demo.SecurityProvider.JWTAuth.JWTProvider;
+import com.example.demo.dto.Response.LoginResponseDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.modelmapper.ModelMapper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.nullValue;
+import static org.hamcrest.Matchers.*;
 import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class AuthenticationServiceImplTest {
-    UserEntity user;
+    UserEntity initialUser;
     AuthenticationService authService;
     UserRepo userRepo;
     PasswordEncoder passwordEncoder;
+    JWTProvider jwtProvider;
+    ModelMapper modelMapper;
+    LoginResponseDTO expectedLoginResponseDTO;
+    CustomUserDetails expectedCustomUserDetails;
 
     @BeforeEach
     void beforeEach() {
         userRepo = mock(UserRepo.class);
         passwordEncoder = mock(PasswordEncoder.class);
-        authService = new AuthenticationServiceImpl(userRepo, passwordEncoder);
-        // password is "alo" in plaintext
-        user = UserEntity.builder().id(1L).email("abc@gmail.com").username("alo").password("$10$jg.egwWVynU8aBv6r8SKWOhFDiYnQavSSXNVwfxqYvstIJyhA7ByS").build();
-        when(userRepo.findByUsername("alo")).thenReturn(Optional.of(user));
-        when(passwordEncoder.matches(anyString(), eq(user.getPassword()))).thenReturn(false);
-        when(passwordEncoder.matches("alo", user.getPassword())).thenReturn(true);
+        jwtProvider = mock(JWTProvider.class);
+        modelMapper = mock(ModelMapper.class);
+        authService = new AuthenticationServiceImpl(userRepo, passwordEncoder, jwtProvider, modelMapper);
+        initialUser = mock(UserEntity.class);
+        expectedLoginResponseDTO = mock(LoginResponseDTO.class);
+        expectedCustomUserDetails = CustomUserDetails.builder().user(initialUser).build();
+        when(userRepo.findByUsername("alo")).thenReturn(Optional.of(initialUser));
+        when(passwordEncoder.matches(anyString(), anyString())).thenReturn(false);
+        when(passwordEncoder.matches("alo", initialUser.getUsername())).thenReturn(true);
     }
 
     @Test
-    void authenticateUser_ShouldReturnUser_WhenCredentialsValid() {
-        UserEntity result = authService.authenticateUser("alo", "alo");
-        assertThat(result, is(user));
+    void authenticateUser_ShouldReturnLoginResponseDTO_WhenCredentialsValid() {
+        LoginResponseDTO result = authService.authenticateUser("alo", "alo");
+
+        verify(jwtProvider).generateAccessToken(expectedCustomUserDetails);
+        verify(jwtProvider).generateRefreshToken(expectedCustomUserDetails);
+        assertThat(result.getRefreshToken(), is(expectedLoginResponseDTO.getRefreshToken()));
+        assertThat(result.getAccessToken(), is(expectedLoginResponseDTO.getAccessToken()));
     }
 
     @Test
     void authenticateUser_ShouldReturnNull_WhenPasswordInvalid() {
-        UserEntity result = authService.authenticateUser("alo", "al");
+        LoginResponseDTO result = authService.authenticateUser("alo", "al");
+
+        verify(jwtProvider, times(0)).generateAccessToken(expectedCustomUserDetails);
+        verify(jwtProvider, times(0)).generateRefreshToken(expectedCustomUserDetails);
         assertThat(result, is(nullValue()));
     }
 
     @Test
     void authenticateUser_ShouldReturnNull_WhenUsernameInvalid() {
-        UserEntity result = authService.authenticateUser("al", "alo");
+        LoginResponseDTO result = authService.authenticateUser("alo", "al");
+
+        verify(jwtProvider, times(0)).generateAccessToken(expectedCustomUserDetails);
+        verify(jwtProvider, times(0)).generateRefreshToken(expectedCustomUserDetails);
         assertThat(result, is(nullValue()));
     }
 
     @Test
     void authenticateUser_ShouldReturnNull_WhenCredentialsInvalid() {
-        UserEntity result = authService.authenticateUser("al", "al");
+        LoginResponseDTO result = authService.authenticateUser("al", "al");
+
+        verify(jwtProvider, times(0)).generateAccessToken(expectedCustomUserDetails);
+        verify(jwtProvider, times(0)).generateRefreshToken(expectedCustomUserDetails);
         assertThat(result, is(nullValue()));
     }
 }
