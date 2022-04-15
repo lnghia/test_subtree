@@ -30,13 +30,13 @@ public class JWTAuthFilter extends OncePerRequestFilter {
         CustomUserDetails customUserDetails = null;
         String jwt = extractJWTFromHeader(httpServletRequest);
 
-        if(jwtProvider.validateToken(jwt)){
+        if (jwtProvider.validateToken(jwt)) {
             userId = Long.valueOf(jwtProvider.getUserIdFromJWT(jwt));
 
-            if(userId != null && SecurityContextHolder.getContext().getAuthentication() == null){
+            if (userId != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 UserEntity user = userService.getUserById(userId);
 
-                if(user != null){
+                if (user != null) {
                     customUserDetails = new CustomUserDetails(user);
 
                     UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(customUserDetails, null, customUserDetails.getAuthorities());
@@ -50,11 +50,11 @@ public class JWTAuthFilter extends OncePerRequestFilter {
         filterChain.doFilter(httpServletRequest, httpServletResponse);
     }
 
-    private String extractJWTFromHeader(HttpServletRequest request){
+    private String extractJWTFromHeader(HttpServletRequest request) {
         final String authorizationHeader = request.getHeader("Authorization");
         String jwt = null;
 
-        if(authorizationHeader != null && authorizationHeader.startsWith("Bearer ")){
+        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             jwt = authorizationHeader.substring(7);
         }
 

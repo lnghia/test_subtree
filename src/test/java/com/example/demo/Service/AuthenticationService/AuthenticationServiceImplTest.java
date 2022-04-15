@@ -1,10 +1,8 @@
-package com.example.demo.ServiceImpl.AuthenticationServiceImpl;
+package com.example.demo.Service.AuthenticationService;
 
 
 import com.example.demo.Entity.UserEntity;
 import com.example.demo.Repository.UserRepo;
-import com.example.demo.Service.AuthenticationService.AuthenticationService;
-import com.example.demo.Service.AuthenticationService.AuthenticationServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -25,7 +23,7 @@ public class AuthenticationServiceImplTest {
     PasswordEncoder passwordEncoder;
 
     @BeforeEach
-    void beforeEach(){
+    void beforeEach() {
         userRepo = mock(UserRepo.class);
         passwordEncoder = mock(PasswordEncoder.class);
         authService = new AuthenticationServiceImpl(userRepo, passwordEncoder);
@@ -37,25 +35,25 @@ public class AuthenticationServiceImplTest {
     }
 
     @Test
-    void authenticateUser_ShouldReturnUser_WhenCredentialsValid(){
+    void authenticateUser_ShouldReturnUser_WhenCredentialsValid() {
         UserEntity result = authService.authenticateUser("alo", "alo");
         assertThat(result, is(user));
     }
 
     @Test
-    void authenticateUser_ShouldReturnNull_WhenPasswordInvalid(){
+    void authenticateUser_ShouldReturnNull_WhenPasswordInvalid() {
         UserEntity result = authService.authenticateUser("alo", "al");
         assertThat(result, is(nullValue()));
     }
 
     @Test
-    void authenticateUser_ShouldReturnNull_WhenUsernameInvalid(){
+    void authenticateUser_ShouldReturnNull_WhenUsernameInvalid() {
         UserEntity result = authService.authenticateUser("al", "alo");
         assertThat(result, is(nullValue()));
     }
 
     @Test
-    void authenticateUser_ShouldReturnNull_WhenCredentialsInvalid(){
+    void authenticateUser_ShouldReturnNull_WhenCredentialsInvalid() {
         UserEntity result = authService.authenticateUser("al", "al");
         assertThat(result, is(nullValue()));
     }

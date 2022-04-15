@@ -11,13 +11,13 @@ import java.util.Optional;
 
 @Service
 @NoArgsConstructor
-public class AuthenticationServiceImpl implements AuthenticationService{
+public class AuthenticationServiceImpl implements AuthenticationService {
     private UserRepo userRepo;
 
     private PasswordEncoder passwordEncoder;
 
     @Autowired
-    public AuthenticationServiceImpl(UserRepo userRepo, PasswordEncoder passwordEncoder){
+    public AuthenticationServiceImpl(UserRepo userRepo, PasswordEncoder passwordEncoder) {
         this.userRepo = userRepo;
         this.passwordEncoder = passwordEncoder;
     }
@@ -26,7 +26,7 @@ public class AuthenticationServiceImpl implements AuthenticationService{
     public UserEntity authenticateUser(String username, String password) {
         Optional<UserEntity> user = userRepo.findByUsername(username);
 
-        if(user.isPresent() && passwordEncoder.matches(password, user.get().getPassword())){
+        if (user.isPresent() && passwordEncoder.matches(password, user.get().getPassword())) {
             return user.get();
         }
 

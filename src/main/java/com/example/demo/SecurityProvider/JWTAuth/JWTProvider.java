@@ -32,7 +32,7 @@ public class JWTProvider {
                 .compact();
     }
 
-    public String generateTokenValidWithin(CustomUserDetails userDetails, int min){
+    public String generateTokenValidWithin(CustomUserDetails userDetails, int min) {
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + min * 60 * 1000);
 
@@ -44,7 +44,7 @@ public class JWTProvider {
                 .compact();
     }
 
-    public String generateRefreshToken(CustomUserDetails userDetails){
+    public String generateRefreshToken(CustomUserDetails userDetails) {
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + REFRESH_JWT_EXPIRATION);
 
@@ -65,8 +65,8 @@ public class JWTProvider {
         return Integer.parseInt(claims.getSubject());
     }
 
-    public boolean validateToken(String token){
-        try{
+    public boolean validateToken(String token) {
+        try {
             Jwts.parser().setSigningKey(JWT_SECRET).parseClaimsJws(token);
 
             return true;

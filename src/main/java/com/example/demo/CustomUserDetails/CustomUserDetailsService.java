@@ -17,7 +17,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     private UserRepo userRepo;
 
     @Autowired
-    public CustomUserDetailsService(UserRepo userRepo){
+    public CustomUserDetailsService(UserRepo userRepo) {
         this.userRepo = userRepo;
     }
 
@@ -25,7 +25,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Optional<UserEntity> user = userRepo.findByUsername(username);
 
-        if(!user.isPresent()) throw new UsernameNotFoundException(username);
+        if (!user.isPresent()) throw new UsernameNotFoundException(username);
 
         return new CustomUserDetails(user.get());
     }

@@ -23,17 +23,17 @@ public class AuthenticationController {
     private JWTProvider jwtProvider;
 
     @GetMapping("/test")
-    public String test(){
+    public String test() {
         return "test.";
     }
 
     @PostMapping("/login")
-    public String login(@RequestBody LoginRequest request){
+    public String login(@RequestBody LoginRequest request) {
         String username = request.getUsername();
         String password = request.getPassword();
         UserEntity user = authService.authenticateUser(username, password);
 
-        if(user != null){
+        if (user != null) {
             CustomUserDetails customUserDetails = new CustomUserDetails(user);
             String accessToken = jwtProvider.generateAccessToken(customUserDetails);
 
@@ -44,7 +44,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("/register")
-    public String register(@RequestBody RegisterRequest request){
+    public String register(@RequestBody RegisterRequest request) {
         String email = request.getEmail();
         String username = request.getUsername();
         String password = request.getPassword();
