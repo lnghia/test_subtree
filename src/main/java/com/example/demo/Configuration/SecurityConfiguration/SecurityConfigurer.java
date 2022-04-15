@@ -1,4 +1,4 @@
-package com.example.demo.Configuration;
+package com.example.demo.Configuration.SecurityConfiguration;
 
 import com.example.demo.CustomUserDetails.CustomUserDetailsService;
 import com.example.demo.SecurityProvider.JWTAuth.JWTAuthFilter;
