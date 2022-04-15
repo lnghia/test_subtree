@@ -2,7 +2,10 @@ package com.example.demo.Service.UserService;
 
 import com.example.demo.Entity.UserEntity;
 import com.example.demo.Repository.UserRepo;
+import com.example.demo.dto.Request.RegisterRequestDTO;
+import com.example.demo.dto.Response.UserResponseDTO;
 import lombok.NoArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -16,10 +19,13 @@ public class UserServiceImpl implements UserService {
 
     private PasswordEncoder passwordEncoder;
 
+    private ModelMapper modelMapper;
+
     @Autowired
-    public UserServiceImpl(UserRepo userRepo, PasswordEncoder passwordEncoder) {
+    public UserServiceImpl(UserRepo userRepo, PasswordEncoder passwordEncoder, ModelMapper modelMapper) {
         this.userRepo = userRepo;
         this.passwordEncoder = passwordEncoder;
+        this.modelMapper = modelMapper;
     }
 
     @Override
@@ -37,13 +43,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserEntity createUser(String email, String username, String password) {
-        UserEntity user = new UserEntity();
+    public UserResponseDTO createUser(UserEntity newUser) {
+        String plainPassword = newUser.getPassword();
+        String encryptedPassword = passwordEncoder.encode(plainPassword);
 
-        user.setUsername(username);
-        user.setEmail(email);
-        user.setPassword(passwordEncoder.encode(password));
+        newUser.setPassword(encryptedPassword);
 
-        return userRepo.save(user);
+        return modelMapper.map(userRepo.save(newUser), UserResponseDTO.class);
     }
 }
