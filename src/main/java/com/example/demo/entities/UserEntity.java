@@ -1,8 +1,9 @@
-package com.example.demo.Entity;
+package com.example.demo.entities;
 
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.Collection;
 import java.util.Date;
 
 @Entity
@@ -32,4 +33,8 @@ public class UserEntity {
     private String lastName;
 
     private Date lastSentOTPTime;
+
+    @ManyToMany
+    @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private Collection<RoleEntity> roles;
 }

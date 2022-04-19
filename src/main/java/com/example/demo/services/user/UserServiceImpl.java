@@ -1,15 +1,16 @@
-package com.example.demo.Service.UserService;
+package com.example.demo.services.user;
 
-import com.example.demo.Entity.UserEntity;
-import com.example.demo.Repository.UserRepo;
-import com.example.demo.dto.Request.RegisterRequestDTO;
-import com.example.demo.dto.Response.UserResponseDTO;
+import com.example.demo.entities.RoleEntity;
+import com.example.demo.entities.UserEntity;
+import com.example.demo.repositories.UserRepo;
+import com.example.demo.dto.responses.UserResponseDTO;
 import lombok.NoArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.Optional;
 
 @Service
@@ -50,5 +51,24 @@ public class UserServiceImpl implements UserService {
         newUser.setPassword(encryptedPassword);
 
         return modelMapper.map(userRepo.save(newUser), UserResponseDTO.class);
+    }
+
+    @Override
+    public Collection<RoleEntity> getUserGrantedPermissions(long id) {
+        Optional<UserEntity> user = userRepo.findById(id);
+
+        return user.get().getRoles();
+    }
+
+    @Override
+    public UserEntity save(UserEntity user) {
+        return userRepo.save(user);
+    }
+
+    @Override
+    public boolean hasUserExisted(long id) {
+        Optional<UserEntity> user = userRepo.findById(id);
+
+        return user.isPresent();
     }
 }
