@@ -1,4 +1,4 @@
-package com.example.demo.dto.Response;
+package com.example.demo.dto.responses;
 
 import lombok.Builder;
 
@@ -8,14 +8,14 @@ import java.util.HashMap;
 @Builder(toBuilder = true)
 public class ResponseBodyDTO {
     private Object data;
-    private ArrayList<String> errors;
+    private HashMap<Object, Object> errors;
 
     public ResponseBodyDTO(){
         data = null;
-        errors = new ArrayList<>();
+        errors = new HashMap<>();
     }
 
-    public ResponseBodyDTO(Object data, ArrayList<String> errors) {
+    public ResponseBodyDTO(Object data, HashMap<Object, Object> errors) {
         this.data = data;
         this.errors = errors;
     }
@@ -28,11 +28,11 @@ public class ResponseBodyDTO {
         this.data = data;
     }
 
-    public ArrayList<String> getErrors() {
+    public HashMap<Object, Object> getErrors() {
         return errors;
     }
 
-    public void setErrors(ArrayList<String> errors) {
+    public void setErrors(HashMap<Object, Object> errors) {
         this.errors = errors;
     }
 }
