@@ -1,7 +1,7 @@
-package com.example.demo.Configuration.SecurityConfiguration;
+package com.example.demo.configurations.security;
 
-import com.example.demo.CustomUserDetails.CustomUserDetailsService;
-import com.example.demo.SecurityProvider.JWTAuth.JWTAuthFilter;
+import com.example.demo.userdetails.CustomUserDetailsService;
+import com.example.demo.securityproviders.JWTAuthFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -30,7 +30,7 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
                 .and().authorizeRequests()
                 .antMatchers("/api/auth/login").permitAll()
                 .antMatchers("/api/auth/register").permitAll()
-                .antMatchers("/api/auth/test").permitAll()
+                .antMatchers("/api/auth/refresh_tokens").permitAll()
                 .anyRequest().authenticated();
 
         http.addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
