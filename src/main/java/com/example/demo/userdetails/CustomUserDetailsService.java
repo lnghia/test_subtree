@@ -1,7 +1,7 @@
-package com.example.demo.CustomUserDetails;
+package com.example.demo.userdetails;
 
-import com.example.demo.Entity.UserEntity;
-import com.example.demo.Repository.UserRepo;
+import com.example.demo.entities.UserEntity;
+import com.example.demo.repositories.UserRepo;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;

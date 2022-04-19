@@ -1,8 +1,8 @@
-package com.example.demo.SecurityProvider.JWTAuth;
+package com.example.demo.securityproviders;
 
-import com.example.demo.CustomUserDetails.CustomUserDetails;
-import com.example.demo.Entity.UserEntity;
-import com.example.demo.Service.UserService.UserService;
+import com.example.demo.userdetails.CustomUserDetails;
+import com.example.demo.entities.UserEntity;
+import com.example.demo.services.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;

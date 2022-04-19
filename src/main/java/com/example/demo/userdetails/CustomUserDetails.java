@@ -1,6 +1,6 @@
-package com.example.demo.CustomUserDetails;
+package com.example.demo.userdetails;
 
-import com.example.demo.Entity.UserEntity;
+import com.example.demo.entities.UserEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

@@ -1,6 +1,7 @@
-package com.example.demo.SecurityProvider.JWTAuth;
+package com.example.demo.securityproviders;
 
-import com.example.demo.CustomUserDetails.CustomUserDetails;
+import com.example.demo.entities.UserEntity;
+import com.example.demo.exceptions.InvalidTokenException;
 import io.jsonwebtoken.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,36 +21,36 @@ public class JWTProvider {
     @Value("${REFRESH_TOKEN_EXPIRATION}")
     private long REFRESH_JWT_EXPIRATION;
 
-    public String generateAccessToken(CustomUserDetails userDetails) {
+    public String generateAccessToken(UserEntity userEntity) {
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + ACCESS_JWT_EXPIRATION);
 
         return Jwts.builder()
-                .setSubject(Long.toString(userDetails.getUser().getId()))
+                .setSubject(Long.toString(userEntity.getId()))
                 .setIssuedAt(now)
                 .setExpiration(expiryDate)
                 .signWith(SignatureAlgorithm.HS512, JWT_SECRET)
                 .compact();
     }
 
-    public String generateTokenValidWithin(CustomUserDetails userDetails, int min) {
+    public String generateTokenValidWithin(UserEntity userEntity, int min) {
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + min * 60 * 1000);
 
         return Jwts.builder()
-                .setSubject(Long.toString(userDetails.getUser().getId()))
+                .setSubject(Long.toString(userEntity.getId()))
                 .setIssuedAt(now)
                 .setExpiration(expiryDate)
                 .signWith(SignatureAlgorithm.HS512, JWT_SECRET)
                 .compact();
     }
 
-    public String generateRefreshToken(CustomUserDetails userDetails) {
+    public String generateRefreshToken(UserEntity userEntity) {
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + REFRESH_JWT_EXPIRATION);
 
         return Jwts.builder()
-                .setSubject(Long.toString(userDetails.getUser().getId()))
+                .setSubject(Long.toString(userEntity.getId()))
                 .setIssuedAt(now)
                 .setExpiration(expiryDate)
                 .signWith(SignatureAlgorithm.HS512, JWT_SECRET)
@@ -70,14 +71,9 @@ public class JWTProvider {
             Jwts.parser().setSigningKey(JWT_SECRET).parseClaimsJws(token);
 
             return true;
-        } catch (MalformedJwtException ex) {
-            log.error("Invalid JWT token");
-        } catch (ExpiredJwtException ex) {
-            log.error("Expired JWT token");
-        } catch (UnsupportedJwtException ex) {
-            log.error("Unsupported JWT token");
-        } catch (IllegalArgumentException ex) {
-            log.error("JWT claims string is empty.");
+        } catch (JwtException ex) {
+            log.error(ex.getMessage());
+//            throw new InvalidTokenException();
         }
 
         return false;
