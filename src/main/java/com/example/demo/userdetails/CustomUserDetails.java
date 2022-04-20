@@ -1,5 +1,6 @@
 package com.example.demo.userdetails;
 
+import com.example.demo.entities.RoleEntity;
 import com.example.demo.entities.UserEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,6 +12,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
+
+import static java.util.function.Predicate.not;
 
 @Data
 @AllArgsConstructor
@@ -20,12 +25,15 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-//        Collection<Role> roles = user.getRoles();
-        List<SimpleGrantedAuthority> authorities = new ArrayList<>(List.of(new SimpleGrantedAuthority("USER")));
-
-//        roles.forEach(role -> {
-//            authorities.add(new SimpleGrantedAuthority(role.getRoleName()));
-//        });
+        Collection<RoleEntity> roles = user.getRoles();
+        List<SimpleGrantedAuthority> authorities = roles.stream().filter(
+                roleEntity -> {
+                    return !roleEntity.isDeleted();
+                }).map(
+                roleEntity -> {
+                    return new SimpleGrantedAuthority(roleEntity.getName());
+                }
+        ).collect(Collectors.toList());
 
         return authorities;
     }
