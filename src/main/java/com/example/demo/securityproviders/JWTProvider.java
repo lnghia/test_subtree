@@ -66,16 +66,9 @@ public class JWTProvider {
         return Integer.parseInt(claims.getSubject());
     }
 
-    public boolean validateToken(String token) {
-        try {
-            Jwts.parser().setSigningKey(JWT_SECRET).parseClaimsJws(token);
+    public boolean validateToken(String token) throws JwtException {
+        Jwts.parser().setSigningKey(JWT_SECRET).parseClaimsJws(token);
 
-            return true;
-        } catch (JwtException ex) {
-            log.error(ex.getMessage());
-//            throw new InvalidTokenException();
-        }
-
-        return false;
+        return true;
     }
 }
