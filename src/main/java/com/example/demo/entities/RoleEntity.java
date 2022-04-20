@@ -3,7 +3,7 @@ package com.example.demo.entities;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.Collection;
+import java.util.Set;
 
 @Entity
 @Table(name = "roles")
@@ -25,7 +25,7 @@ public class RoleEntity {
 
     @ManyToMany()
     @JoinTable(name = "role_permission", joinColumns = @JoinColumn(name = "role_id"), inverseJoinColumns = @JoinColumn(name = "permission_id"))
-    private Collection<PermissionEntity> permissions;
+    private Set<PermissionEntity> permissions;
 
 //    @ManyToMany(mappedBy = "roles", fetch = FetchType.EAGER)
 //    private Collection<UserEntity> users;

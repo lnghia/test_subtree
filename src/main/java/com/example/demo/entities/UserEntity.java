@@ -1,11 +1,10 @@
 package com.example.demo.entities;
 
 import lombok.*;
-import org.springframework.data.repository.cdi.Eager;
 
 import javax.persistence.*;
-import java.util.Collection;
 import java.util.Date;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -38,6 +37,6 @@ public class UserEntity {
     private boolean isDeleted = false;
 
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private Collection<RoleEntity> roles;
+    @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"), uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id", "role_id"})})
+    private Set<RoleEntity> roles;
 }
