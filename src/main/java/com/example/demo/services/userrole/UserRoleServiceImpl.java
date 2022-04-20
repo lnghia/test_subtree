@@ -1,12 +1,11 @@
 package com.example.demo.services.userrole;
 
+import com.example.demo.dto.responses.UserResponseDTO;
 import com.example.demo.entities.RoleEntity;
 import com.example.demo.entities.UserEntity;
 import com.example.demo.repositories.RoleRepo;
 import com.example.demo.repositories.UserRepo;
-import com.example.demo.dto.responses.UserResponseDTO;
 import lombok.NoArgsConstructor;
-import org.apache.catalina.User;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -38,6 +37,6 @@ public class UserRoleServiceImpl implements UserRoleService {
         user.getRoles().add(roleEntity);
         user = userRepo.save(user);
 
-        return modelMapper.map(userEntity, UserResponseDTO.class);
+        return modelMapper.map(user, UserResponseDTO.class);
     }
 }

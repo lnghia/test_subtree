@@ -49,4 +49,22 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
 
         return new ResponseEntity(response, HttpStatus.NOT_FOUND);
     }
+
+//    @Override
+//    protected ResponseEntity<Object> handleMissingServletRequestParameter(MissingServletRequestParameterException exception, HttpHeaders headers, HttpStatus status, WebRequest request) {
+//        ResponseBodyDTO response = new ResponseBodyDTO();
+//
+//        response.getErrors().put(exception.getParameterName(), exception.getMessage());
+//
+//        return new ResponseEntity(response, HttpStatus.BAD_REQUEST);
+//    }
+
+//    @ExceptionHandler(MissingRequestHeaderException.class)
+//    protected ResponseEntity<Object> handleMissingRequestHeaderException(MissingRequestHeaderException exception, HttpHeaders headers, HttpStatus status, WebRequest request) {
+//        ResponseBodyDTO response = new ResponseBodyDTO();
+//
+//        response.getErrors().put(exception.getHeaderName(), exception.getMessage());
+//
+//        return new ResponseEntity(response, HttpStatus.BAD_REQUEST);
+//    }
 }
