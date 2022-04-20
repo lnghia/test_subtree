@@ -19,4 +19,6 @@ public class PermissionEntity {
     private String name;
 
     private int value;
+
+    private boolean isDeleted = false;
 }

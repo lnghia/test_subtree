@@ -18,4 +18,6 @@ public interface UserService {
     UserEntity save(UserEntity user);
 
     boolean hasUserExisted(long id);
+
+    boolean hasUserExisted(String email);
 }

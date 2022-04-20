@@ -21,7 +21,12 @@ public class RoleEntity {
 
     private int value;
 
-    @ManyToMany
+    private boolean isDeleted = false;
+
+    @ManyToMany()
     @JoinTable(name = "role_permission", joinColumns = @JoinColumn(name = "role_id"), inverseJoinColumns = @JoinColumn(name = "permission_id"))
     private Collection<PermissionEntity> permissions;
+
+//    @ManyToMany(mappedBy = "roles", fetch = FetchType.EAGER)
+//    private Collection<UserEntity> users;
 }

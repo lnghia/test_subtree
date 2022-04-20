@@ -5,6 +5,7 @@ import com.example.demo.entities.UserEntity;
 import com.example.demo.repositories.UserRepo;
 import com.example.demo.dto.responses.UserResponseDTO;
 import lombok.NoArgsConstructor;
+import org.apache.catalina.User;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -49,6 +50,7 @@ public class UserServiceImpl implements UserService {
         String encryptedPassword = passwordEncoder.encode(plainPassword);
 
         newUser.setPassword(encryptedPassword);
+        newUser.setUsername(newUser.getEmail());
 
         return modelMapper.map(userRepo.save(newUser), UserResponseDTO.class);
     }
@@ -68,6 +70,13 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean hasUserExisted(long id) {
         Optional<UserEntity> user = userRepo.findById(id);
+
+        return user.isPresent();
+    }
+
+    @Override
+    public boolean hasUserExisted(String email) {
+        Optional<UserEntity> user = userRepo.findByUsername(email);
 
         return user.isPresent();
     }
