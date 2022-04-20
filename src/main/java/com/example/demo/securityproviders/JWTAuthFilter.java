@@ -2,12 +2,10 @@ package com.example.demo.securityproviders;
 
 import com.example.demo.configurations.security.PermittedUrlsUtil;
 import com.example.demo.dto.responses.ResponseBodyDTO;
-import com.example.demo.exceptions.InvalidTokenException;
-import com.example.demo.userdetails.CustomUserDetails;
 import com.example.demo.entities.UserEntity;
 import com.example.demo.services.user.UserService;
+import com.example.demo.userdetails.CustomUserDetails;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -61,7 +59,7 @@ public class JWTAuthFilter extends OncePerRequestFilter {
                         }
                     }
                 }
-            } catch (InvalidTokenException exception) {
+            } catch (JwtException exception) {
                 ResponseBodyDTO responseBodyDTO = new ResponseBodyDTO();
 
                 responseBodyDTO.getErrors().put("JWT token", "Invalid token");
