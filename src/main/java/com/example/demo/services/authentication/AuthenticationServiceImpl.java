@@ -2,7 +2,6 @@ package com.example.demo.services.authentication;
 
 import com.example.demo.entities.UserEntity;
 import com.example.demo.exceptions.InvalidTokenException;
-import com.example.demo.exceptions.UserNotFoundException;
 import com.example.demo.exceptions.UsernamePasswordInvalidException;
 import com.example.demo.repositories.UserRepo;
 import com.example.demo.securityproviders.JWTProvider;
@@ -38,24 +37,20 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     public LoginResponseDTO authenticateUser(String username, String password) {
         Optional<UserEntity> user = userRepo.findByUsername(username);
 
-        if (user.isPresent()) {
-            if (passwordEncoder.matches(password, user.get().getPassword())) {
-                String accessToken = jwtProvider.generateAccessToken(user.get());
-                String refreshToken = jwtProvider.generateRefreshToken(user.get());
-                LoginResponseDTO loginResponseDTO = new LoginResponseDTO(accessToken, refreshToken);
+        if (user.isPresent() && passwordEncoder.matches(password, user.get().getPassword())) {
+            String accessToken = jwtProvider.generateAccessToken(user.get());
+            String refreshToken = jwtProvider.generateRefreshToken(user.get());
+            LoginResponseDTO loginResponseDTO = new LoginResponseDTO(accessToken, refreshToken);
 
-                return loginResponseDTO;
-            }
-
-            throw new UsernamePasswordInvalidException();
+            return loginResponseDTO;
         }
 
-        throw new UserNotFoundException();
+        throw new UsernamePasswordInvalidException();
     }
 
     @Override
     public LoginResponseDTO refreshAccessToken(String refreshToken) {
-        if (refreshToken != null && !refreshToken.isEmpty() && jwtProvider.validateToken(refreshToken)) {
+        if (refreshToken != null && jwtProvider.validateToken(refreshToken)) {
             long userId = jwtProvider.getUserIdFromJWT(refreshToken);
             Optional<UserEntity> user = userRepo.findById(userId);
 
