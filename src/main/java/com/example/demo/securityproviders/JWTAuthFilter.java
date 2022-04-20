@@ -1,8 +1,13 @@
 package com.example.demo.securityproviders;
 
+import com.example.demo.configurations.security.PermittedUrlsUtil;
+import com.example.demo.dto.responses.ResponseBodyDTO;
 import com.example.demo.userdetails.CustomUserDetails;
 import com.example.demo.entities.UserEntity;
 import com.example.demo.services.user.UserService;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -16,6 +21,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+import static org.springframework.http.HttpStatus.UNAUTHORIZED;
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+
 @Component
 public class JWTAuthFilter extends OncePerRequestFilter {
     @Autowired
@@ -24,26 +32,42 @@ public class JWTAuthFilter extends OncePerRequestFilter {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private PermittedUrlsUtil permittedUrlsUtil;
+
     @Override
     protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, FilterChain filterChain) throws ServletException, IOException {
         Long userId = null;
         CustomUserDetails customUserDetails = null;
         String jwt = extractJWTFromHeader(httpServletRequest);
 
-        if (jwtProvider.validateToken(jwt)) {
-            userId = Long.valueOf(jwtProvider.getUserIdFromJWT(jwt));
+        if (!permittedUrlsUtil.isPermitted(httpServletRequest.getRequestURI())) {
+            try {
+                if (jwtProvider.validateToken(jwt)) {
 
-            if (userId != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-                UserEntity user = userService.getUserById(userId);
+                    userId = Long.valueOf(jwtProvider.getUserIdFromJWT(jwt));
 
-                if (user != null) {
-                    customUserDetails = new CustomUserDetails(user);
+                    if (userId != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+                        UserEntity user = userService.getUserById(userId);
 
-                    UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(customUserDetails, null, customUserDetails.getAuthorities());
-                    usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(httpServletRequest));
+                        if (user != null) {
+                            customUserDetails = new CustomUserDetails(user);
 
-                    SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+                            UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(customUserDetails, null, customUserDetails.getAuthorities());
+                            usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(httpServletRequest));
+
+                            SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+                        }
+                    }
                 }
+            } catch (JwtException exception) {
+                ResponseBodyDTO responseBodyDTO = new ResponseBodyDTO();
+
+                responseBodyDTO.getErrors().put("JWT token", "Invalid token");
+
+                httpServletResponse.setStatus(UNAUTHORIZED.value());
+                httpServletResponse.setContentType(APPLICATION_JSON_VALUE);
+                new ObjectMapper().writeValue(httpServletResponse.getOutputStream(), responseBodyDTO);
             }
         }
 
