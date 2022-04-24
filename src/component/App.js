@@ -1,5 +1,6 @@
 import './App.css';
 import LoginUser from './Login/user/LoginUser';
+import Home from './Home/user/Home';
 import { Routes, Route } from "react-router-dom";
 import MyNavbar from './Navbar/MyNavbar';
 import Container from 'react-bootstrap/esm/Container';
@@ -11,11 +12,10 @@ function App() {
   return (
     <div>
       <MyNavbar />
-      <Container>
-        <Routes>
-          <Route path="/login" element={<LoginUser />} />
-        </Routes>
-      </Container>
+      <Routes>
+        <Route path="/login" element={<LoginUser />} />
+        <Route path="" element={<Home />} />
+      </Routes>
     </div>
 
   );
