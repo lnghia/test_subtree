@@ -1,11 +1,12 @@
 package com.example.demo.services.authentication;
 
+import com.example.demo.dto.responses.LoginResponseDTO;
 import com.example.demo.entities.UserEntity;
 import com.example.demo.exceptions.InvalidTokenException;
 import com.example.demo.exceptions.UsernamePasswordInvalidException;
 import com.example.demo.repositories.UserRepo;
 import com.example.demo.securityproviders.JWTProvider;
-import com.example.demo.dto.responses.LoginResponseDTO;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import java.util.Optional;
 
 @Service
 @NoArgsConstructor
+@Getter
 public class AuthenticationServiceImpl implements AuthenticationService {
     private UserRepo userRepo;
 
@@ -50,7 +52,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public LoginResponseDTO refreshAccessToken(String refreshToken) {
-        if (refreshToken != null && jwtProvider.validateToken(refreshToken)) {
+        if (jwtProvider.validateRefreshToken(refreshToken)) {
             long userId = jwtProvider.getUserIdFromJWT(refreshToken);
             Optional<UserEntity> user = userRepo.findById(userId);
 

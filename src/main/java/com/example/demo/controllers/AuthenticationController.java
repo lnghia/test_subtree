@@ -76,7 +76,7 @@ public class AuthenticationController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/refresh_tokens")
+    @PutMapping("/refresh_tokens")
     public ResponseEntity<ResponseBodyDTO> refreshTokens(@RequestHeader(value = "Refresh-Token", required = true) String refreshToken) {
         LoginResponseDTO responseDTO = authService.refreshAccessToken(refreshToken);
 

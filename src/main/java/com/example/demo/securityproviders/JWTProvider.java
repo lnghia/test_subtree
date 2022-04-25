@@ -1,8 +1,10 @@
 package com.example.demo.securityproviders;
 
 import com.example.demo.entities.UserEntity;
-import com.example.demo.exceptions.InvalidTokenException;
-import io.jsonwebtoken.*;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -68,6 +70,16 @@ public class JWTProvider {
 
     public boolean validateToken(String token) throws JwtException {
         Jwts.parser().setSigningKey(JWT_SECRET).parseClaimsJws(token);
+
+        return true;
+    }
+
+    public boolean validateRefreshToken(String token) {
+        try {
+            Jwts.parser().setSigningKey(JWT_SECRET).parseClaimsJws(token);
+        } catch (Exception exception) {
+            return false;
+        }
 
         return true;
     }
