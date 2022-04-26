@@ -20,5 +20,5 @@ public class GenderEntity {
     private String name;
 
     @OneToMany(mappedBy = "gender")
-    private Set<UserEntity> users;
+    private Set<ProductEntity> products;
 }

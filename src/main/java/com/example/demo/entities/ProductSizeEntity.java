@@ -1,5 +1,6 @@
 package com.example.demo.entities;
 
+import com.example.demo.entities.idclasses.ProductSizeId;
 import lombok.*;
 
 import javax.persistence.*;
@@ -11,12 +12,23 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder(toBuilder = true)
+@IdClass(ProductSizeId.class)
 public class ProductSizeEntity {
+//    @Id
+//    @Column(name = "product_id")
+//    private int productId;
+//
+//    @Id
+//    @Column(name = "size_id")
+//    private int sizeId;
+
+    @Id
     @ManyToOne
     @JoinColumn(name = "product_id", referencedColumnName = "id")
     private ProductEntity product;
 
-    @ManyToMany
+    @Id
+    @ManyToOne
     @JoinColumn(name = "size_id", referencedColumnName = "id")
     private SizeEntity size;
 
